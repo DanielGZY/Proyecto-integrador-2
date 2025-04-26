@@ -3,9 +3,8 @@
 Proyecto para la universidad del valle de Mexico
 
 
-+------------------------------------------------+
-|                  Creditos                      |
-+------------------------------------------------+
+               Creditos                      
+
   Lead Developer                                 
   Daniel Gustavo Zagal Yescas                    
                                                
@@ -13,7 +12,7 @@ Proyecto para la universidad del valle de Mexico
   Ariciaga Esquivel Luis Yahir                   
   Chavez Pineda Ximena                           
   Morales Guzman Pedro David                     
-+------------------------------------------------+
+
 
 
 Proyecto-integrador-2 (c) by Daniel Zagal

@@ -7,17 +7,21 @@ public class Pelicula {
 
     private String titulo;
     private String genero;
-    private int year;
+    private String year; //HACK: Colocando el valor de a;o en string para poder agregarlo a los JText buttons ya que no tengo ganas de lidiar con esto
+                         //TODO: Buscar el boton correcto que pase valores int en vez de String.
     private int visitas;
-    private final List<Float> calificaciones; // Thread-safe access below
+    private final List<Float> calificaciones; 
 
-    public Pelicula(String titulo, String genero, int year, int visitas) {
+    public Pelicula(String titulo, String genero, String year, int visitas) {
         this.titulo = titulo;
         this.genero = genero;
         this.year = year;
         this.visitas = visitas;
         this.calificaciones = Collections.synchronizedList(new ArrayList<>());
     }
+    
+    // Hay una cantidad excesiva de basura aqui que no estoy utilizando, limpiar mas tarde por ahora se quedan aqui just in case
+    
 
     public synchronized String getTitulo() {
         return titulo;
@@ -35,11 +39,11 @@ public class Pelicula {
         this.genero = genero;
     }
 
-    public synchronized int getYear() {
+    public synchronized String getYear() {
         return year;
     }
 
-    public synchronized void setYear(int year) {
+    public synchronized void setYear(String year) {
         this.year = year;
     }
 
@@ -51,14 +55,12 @@ public class Pelicula {
         this.visitas = visitas;
     }
 
-    // Concurrency-safe: Add rating
     public void agregarCalificacion(float rating) {
         if (rating >= 0 && rating <= 10) {
             calificaciones.add(rating);
         }
     }
 
-    // Get average rating
     public float getPromedioCalificaciones() {
         synchronized (calificaciones) {
             if (calificaciones.isEmpty()) return 0;

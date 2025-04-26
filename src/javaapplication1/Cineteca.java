@@ -4,10 +4,13 @@ package javaapplication1;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Cineteca {
-    private List<Pelicula> peliculas;
-
+    private final List<Pelicula> peliculas;
+    private final Random rand = new Random();
+    
+    
     public Cineteca() {
         peliculas = new ArrayList<>();
     }
@@ -44,16 +47,13 @@ public class Cineteca {
         return null; // No encontrada
     }
 
-    // Generar detalles de todas las películas (para JTextArea, por ejemplo)
-    public String getCatalogoDetallado() {
-        if (peliculas.isEmpty()) return "No hay películas registradas.";
-
-        StringBuilder sb = new StringBuilder();
-        for (Pelicula p : peliculas) {
-            sb.append(p.getDetalle()).append("\n-----\n");
-        }
-        return sb.toString();
+      public synchronized Pelicula obtenerPeliculaAleatoria() {
+        if (peliculas.isEmpty()) return null;
+        int index = rand.nextInt(peliculas.size());
+        return peliculas.get(index);
     }
+
+   
 }
 
 

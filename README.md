@@ -3,7 +3,7 @@
 Proyecto para la universidad del valle de Mexico
 
 
-               Creditos                      
+  Creditos                 
 
   Lead Developer                                 
   Daniel Gustavo Zagal Yescas                    

@@ -4,6 +4,9 @@
  */
 package javaapplication1;
 
+
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,12 +20,19 @@ public class GUI extends javax.swing.JFrame {
     private Cineteca cineteca;
     private PeliculaTableModel modelo;
 
+    
+    
+    
     public GUI(Cineteca cineteca) {
         this.cineteca = cineteca;
         initComponents();
         
         modelo = new PeliculaTableModel(cineteca);
-        tablaPeliculas.setModel(modelo); // ⚡ Cuidado, tu variable es tablaPeliculas, no tablePeliculas
+        tablaPeliculas.setModel(modelo);
+        
+            
+        
+      
         
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -53,6 +63,7 @@ public class GUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
+        eliminarBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,14 +99,21 @@ public class GUI extends javax.swing.JFrame {
 
         jTextField1.setText("jTextField2");
 
+        eliminarBtn.setText("Eliminar");
+        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
@@ -104,12 +122,13 @@ public class GUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextField2)
                             .addComponent(jTextField3)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
-                        .addGap(18, 18, 18))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(eliminarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -132,7 +151,9 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(jLabel3)
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                            .addComponent(eliminarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -140,37 +161,57 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nombre = jTextField1.getText();
-        String ano = jTextField2.getText();
-        String genero = jTextField3.getText();
-        int vistas = 0;
-        float rating = 0;
-        
-        
-         try {
+    String nombre = jTextField1.getText().trim();
+    String ano = jTextField2.getText().trim();
+    String genero = jTextField3.getText().trim();
+    int vistas = 0;
+    float rating = 0;
 
-        // Crear nueva película
-        Pelicula nuevaPelicula = new Pelicula(nombre, genero, ano, 0); // 0 visitas inicialmente
+    if (nombre.isEmpty() || ano.isEmpty() || genero.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor completa todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        // Agregar a la cineteca
+    try {
+        Pelicula nuevaPelicula = new Pelicula(nombre, genero, ano, vistas); // rating optional here
+
+        // Add to Cineteca
         cineteca.agregarPelicula(nuevaPelicula);
 
-        // Actualizar la tabla
+        // Refresh table
         modelo.fireTableDataChanged();
 
-        // Limpiar los campos
+        // Clear fields
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
 
-        
+        System.out.println("Película agregada: " + nombre);
 
     } catch (NumberFormatException e) {
-        System.out.println("Error, se coloco un valor no soportado ");
+        JOptionPane.showMessageDialog(this, "Formato inválido en el año.", "Error", JOptionPane.ERROR_MESSAGE);
     }
-        
                 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
+        
+    String titulo = JOptionPane.showInputDialog(null, "Introduce el título de la película a eliminar:");
+
+    if (titulo != null && !titulo.trim().isEmpty()) {
+        boolean eliminadoMemoria = cineteca.eliminarPeliculaPorTitulo(titulo.trim());
+        boolean eliminadoBD = DatabaseManager.getInstance().eliminarPeliculaPorTitulo(titulo.trim());
+
+        if (eliminadoMemoria || eliminadoBD) {
+            JOptionPane.showMessageDialog(null, "Película eliminada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Película no encontrada en la base de datos ni en memoria.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "No se ingresó ningún título.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+        
+    }//GEN-LAST:event_eliminarBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,6 +228,7 @@ public class GUI extends javax.swing.JFrame {
   
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton eliminarBtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

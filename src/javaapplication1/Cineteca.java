@@ -1,7 +1,10 @@
 
 package javaapplication1;
 
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -52,8 +55,32 @@ public class Cineteca {
         int index = rand.nextInt(peliculas.size());
         return peliculas.get(index);
     }
+      
+    public static void cargarPeliculasDesdeDB(Cineteca cineteca) {
+    String query = "SELECT titulo, genero, year, visitas, rating FROM peliculas";
 
-   
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String titulo = rs.getString("titulo");
+                String genero = rs.getString("genero");
+                String year = rs.getString("year");
+                int visitas = rs.getInt("visitas");
+                float rating = rs.getFloat("rating");
+
+                Pelicula p = new Pelicula(titulo, genero, year, visitas);
+                cineteca.agregarPelicula(p);
+            }
+
+            System.out.println("Películas cargadas desde la base de datos.");
+
+        } catch (SQLException e) {
+            System.err.println("Error al cargar películas desde la base de datos: " + e.getMessage());
+        }
+    }
+ 
 }
 
 

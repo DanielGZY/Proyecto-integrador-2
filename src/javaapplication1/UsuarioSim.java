@@ -27,7 +27,7 @@ public class UsuarioSim implements Runnable {
                    p.setVisitas(newVista);
                    
                     
-                    System.out.println("DEBUG: " + nombre + " calificó \"" + p.getTitulo() + "\" con " + nuevaCalificacion + "con la vista " + newVista);
+                 //   System.out.println("DEBUG: " + nombre + " calificó \"" + p.getTitulo() + "\" con " + nuevaCalificacion + "con la vista " + newVista);
                 }
 
                 //tiempo de CD
